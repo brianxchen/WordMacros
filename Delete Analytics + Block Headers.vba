@@ -1,0 +1,30 @@
+Sub DeleteAnalytics()
+    Dim p As Paragraph
+    Dim rngDoc As Range
+    Dim checkedBlocks As Boolean
+    
+    checkedBlocks = False
+    
+    For Each p In ActiveDocument.Paragraphs
+        If InStr(p.Range.Words(1).Style, "Heading 3,Block") = 1 Then
+            Set rngDoc = ActiveDocument.Range(Start:=p.Range.Start, End:=p.Range.End)
+            rngDoc.Select
+            WordBasic.SelectSimilarFormatting
+            Selection.Delete
+            checkedBlocks = True
+        End If
+        If InStr(p.Range.Words(1).Style, "Analytic") = 1 Then
+            Set rngDoc = ActiveDocument.Range(Start:=p.Range.Start, End:=p.Range.End)
+            rngDoc.Select
+            If (rngDoc.Font.Underline <> wdUnderlineNone) Then
+                rngDoc.Underline = wdUnderlineNone
+            End If
+            WordBasic.SelectSimilarFormatting
+            Selection.Delete
+            If checkedBlocks Then
+                Exit For
+            End If
+        End If
+    Next p
+
+End Sub
